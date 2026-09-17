@@ -6,29 +6,35 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  const proposalId = params.id
   const { data: proposal } = await supabase
-    .from('proposals').select('*, customers(*), products(*)').eq('id', params.id).eq('agent_id', user.id).single()
+    .from('proposals')
+    .select('*')
+    .eq('id', proposalId)
+    .eq('agent_id', user.id)
+    .single()
 
   if (!proposal) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const { data: existing } = await supabase
-    .from('payments').select('*').eq('proposal_id', params.id).eq('status', 'pending').single()
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const pdfUrl = `${appUrl}/api/proposals/${proposalId}/pdf`
 
-  if (existing) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    return NextResponse.json({ url: `${appUrl}/pay/${existing.token}`, token: existing.token })
+  if (!proposal.pdf_url) {
+    await supabase.from('proposals').update({ pdf_url: pdfUrl }).eq('id', proposalId)
   }
 
-  const token = `pay-${Date.now()}-${Math.random().toString(36).slice(2)}`
-  const { data: payment, error } = await supabase.from('payments').insert({
-    proposal_id: params.id,
-    token,
-    amount_inr: proposal.premium_inr,
-    status: 'pending',
-  }).select().single()
+  const { data: existing } = await supabase
+    .from('payments').select('*').eq('proposal_id', proposalId).single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (existing) {
+    return NextResponse.json({ token: existing.token, url: `${appUrl}/pay/${existing.token}`, pdf_url: pdfUrl })
+  }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  return NextResponse.json({ url: `${appUrl}/pay/${token}`, token })
+  const payToken = crypto.randomUUID().replace(/-/g, '').slice(0, 32)
+  const { data: payment } = await supabase
+    .from('payments')
+    .insert({ proposal_id: proposalId, token: payToken, amount_inr: proposal.premium_inr, status: 'pending' })
+    .select().single()
+
+  return NextResponse.json({ token: payToken, url: `${appUrl}/pay/${payToken}`, pdf_url: pdfUrl })
 }
