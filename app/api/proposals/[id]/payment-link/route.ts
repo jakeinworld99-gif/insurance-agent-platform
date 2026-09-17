@@ -1,17 +1,17 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getAgentId } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const agentId = await getAgentId(supabase)
+  if (!agentId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const proposalId = params.id
   const { data: proposal } = await supabase
     .from('proposals')
     .select('*')
     .eq('id', proposalId)
-    .eq('agent_id', user.id)
+    .eq('agent_id', agentId)
     .single()
 
   if (!proposal) return NextResponse.json({ error: 'Not found' }, { status: 404 })
