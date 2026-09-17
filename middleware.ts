@@ -20,11 +20,19 @@ export async function middleware(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = req.nextUrl
 
-  // Public routes
+  // Public routes — token-bearing customer links and unauthenticated webhooks.
+  // /pay and /api/payments/ share the same token model; RLS on payments/proposals
+  // scopes mutations to the row matching the token, so no agent session is needed.
+  // /api/proposals/[id]/pdf is intentionally public too so emailed PDF links work.
+  const isPublicPayments = pathname.startsWith('/api/payments/')
+  const isPublicProposalPdf =
+    pathname.startsWith('/api/proposals/') && pathname.endsWith('/pdf')
   if (pathname.startsWith('/login') ||
       pathname.startsWith('/signup') ||
       pathname.startsWith('/pay') ||
-      pathname === '/') {
+      pathname === '/' ||
+      isPublicPayments ||
+      isPublicProposalPdf) {
     // Allow public access
   } else if (
       pathname.startsWith('/dashboard') ||
