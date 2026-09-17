@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, getAgentId } from '@/lib/supabase/client'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -13,12 +13,18 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) router.push('/login')
-      else {
-        setUser(user)
-        fetchCustomers(user.id)
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) {
+        router.push('/login')
+        return
       }
+      setUser(user)
+      const agentId = await getAgentId(supabase)
+      if (!agentId) {
+        router.push('/login')
+        return
+      }
+      fetchCustomers(agentId)
     })
   }, [])
 
@@ -77,7 +83,7 @@ export default function DashboardPage() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">{c.full_name}</h3>
-                      <p className="text-gray-500 text-sm">{c.email} · {c.phone}</p>
+                      <p className="text-gray-500 text-sm">{c.email} - {c.phone}</p>
                     </div>
                     <span className="text-sm text-gray-400">{new Date(c.created_at).toLocaleDateString()}</span>
                   </div>
