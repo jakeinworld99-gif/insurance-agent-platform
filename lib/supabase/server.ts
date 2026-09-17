@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSbClient } from '@supabase/supabase-js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
@@ -19,6 +20,23 @@ export async function createClient(): Promise<SupabaseClient> {
         },
       },
     }
+  )
+}
+
+/**
+ * Service-role client (bypasses RLS). Use only on the server, only when the
+ * caller already trusts the input by some other means (UUID in URL, signed
+ * token, etc.). Never expose to the browser.
+ *
+ * Currently used by the public PDF route, where the proposal UUID is the
+ * bearer: any visitor with the URL can render the demo proposal. Demo data
+ * only.
+ */
+export function createServiceClient(): SupabaseClient {
+  return createSbClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
   )
 }
 

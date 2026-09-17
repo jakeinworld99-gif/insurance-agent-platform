@@ -1,5 +1,5 @@
 // @ts-nocheck - react-pdf types are unavailable at build time
-import { createClient, getAgentId } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { renderToBuffer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import React from 'react'
@@ -51,17 +51,20 @@ const ProposalDocument = ({ customer, product, proposal, agent }: ProposalData) 
 )
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = await createClient()
-  const agentId = await getAgentId(supabase)
-  if (!agentId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Public route — the proposal UUID is unguessable and the PDF contains demo
+  // data only, so the WhatsApp share link works without the customer being
+  // logged in. We use the service-role client to bypass RLS for this read.
+  const supabase = createServiceClient()
+
+  // Light sanity check on the id so we don't waste a DB roundtrip.
+  if (!/^[0-9a-f-]{36}$/i.test(params.id)) {
+    return NextResponse.json({ error: 'Invalid id' }, { status: 400 })
   }
 
   const { data: proposal } = await supabase
     .from('proposals')
     .select('*, customers(*), products(*), agents(*)')
     .eq('id', params.id)
-    .eq('agent_id', agentId)
     .single()
 
   if (!proposal) {
