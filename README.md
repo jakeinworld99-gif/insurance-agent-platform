@@ -28,8 +28,11 @@ npm install
 1. Create a Supabase project at https://supabase.com
 2. Note your project ref, anon key, and service role key
 3. Run the schema migration in `supabase/migrations/0001_init.sql`
-4. Run the seed data in `supabase/seed.sql`
-5. Create a storage bucket named `proposals` (private) in the Supabase dashboard
+4. Run the seed data in `supabase/seed.sql` (pass your Resend account-owner email as `psql ... --variable demo_email='owner@example.com' -f supabase/seed.sql` so the confirmation email lands in your inbox; the seed inserts one demo agent and one demo customer tied to that agent)
+
+> No storage bucket is required. The proposal PDF is rendered server-side in
+> the Node route handler and streamed back to the browser. There is no
+> Supabase Storage upload anywhere in this build.
 
 ### 3. Resend setup
 
@@ -91,4 +94,8 @@ See `architecture.md` for the full technical design including the Supabase schem
 
 ## Credentials
 
-No demo credentials are pre-seeded. The agent signs up live during the demo.
+Demo credentials after running `supabase/seed.sql --variable demo_email=<address>`:
+- email: `<address>` (the Resend account-owner email)
+- password: `demo1234`
+
+If you did not run the seed, sign up live via `/signup`.
