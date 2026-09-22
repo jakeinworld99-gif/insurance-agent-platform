@@ -28,7 +28,7 @@ npm install
 1. Create a Supabase project at https://supabase.com
 2. Note your project ref, anon key, and service role key
 3. Run the schema migration in `supabase/migrations/0001_init.sql`
-4. Run the seed data in `supabase/seed.sql` (pass your Resend account-owner email as `psql ... --variable demo_email='owner@example.com' -f supabase/seed.sql` so the confirmation email lands in your inbox; the seed inserts one demo agent and one demo customer tied to that agent)
+4. Run the seed data in `supabase/seed.sql` (pass your Resend account-owner email as `psql ... --variable demo_email='owner@example.com' -f supabase/seed.sql` so the confirmation email lands in your inbox). v2 seed inserts **three products** (one Term, one Health, one Vehicle), **two demo agents**, and **one demo customer** whose email matches `demo_email` so the payment confirmation email delivers.
 
 > No storage bucket is required. The proposal PDF is rendered server-side in
 > the Node route handler and streamed back to the browser. There is no
@@ -94,8 +94,25 @@ See `architecture.md` for the full technical design including the Supabase schem
 
 ## Credentials
 
-Demo credentials after running `supabase/seed.sql --variable demo_email=<address>`:
-- email: `<address>` (the Resend account-owner email)
-- password: `demo1234`
+Demo credentials after running `supabase/seed.sql --variable demo_email=<address>` (the Resend account-owner email):
 
-If you did not run the seed, sign up live via `/signup`.
+| Account | Email | Password |
+|---|---|---|
+| Agent 1 | `<address>` (the Resend account-owner email) | `demo1234` |
+| Agent 2 | `agent2+<address>` | `demo1234` |
+| Customer | `<address>` (same as Agent 1, so Resend delivers) | n/a (no login) |
+
+Agent 2's email is the local-part of `<address>` with an `agent2+` prefix and the same domain, so the second agent signs up at a distinct address but no extra Resend account is needed.
+
+## v2 notes (22 Sep 2026 rebuild)
+
+- Repository: `jakeinworld99-gif/insurance-agent-platform`
+- Vercel project: `insurance-agent-platform-v2` (`prj_TsKw5zZnYNGSfv8J3wu72hN6CkSt`)
+- Supabase project: `insurance-agent-platform` (ref `zuuyygcqrsjgoafetdwz`, region `ap-south-1`)
+- Email sender: `Insurance Platform <onboarding@resend.dev>` (no verified domain; Resend test mode)
+- Customer-facing acceptance: `/api/proposals/[id]/pdf` and `/api/payments/[token]/confirm` and `/pay/[token]` are publicly accessible (no login required) — the `middleware.ts` allows them.
+- WhatsApp share: `https://wa.me/<phone>?text=<encoded proposal message>`.
+- Customer PDF link and payment link open without auth; pressing Pay flips payment status to `completed`, the policy becomes `active`, and Resend sends the confirmation email to the customer email.
+- All money shown is real-looking demo data; there is no real payment gateway.
+
+If the seed has not been run for this Supabase project, sign up live via `/signup` instead.
