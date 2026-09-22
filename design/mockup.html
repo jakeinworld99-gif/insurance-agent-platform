@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>Insurance Agent Platform — V1 Mockup (KAN-32)</title>
+<!--
+  Self-contained HTML mockup. Reason: the Figma MCP hit the Starter plan
+  tool-call limit and the seat is View, so I could not create the page
+  in the Align UI file. This is the fallback path, labeled as such.
+  Once the seat is upgraded to Editor (or the call quota resets), the
+  same screens get rebuilt inside the Align UI Design System file.
+-->
+<link rel="preconnect" href="https://rsms.me/">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+<style>
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-2: #f4f4f5;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --fg: #18181b;
+    --fg-muted: #52525b;
+    --fg-subtle: #71717a;
+    --brand: #0f172a;
+    --brand-fg: #ffffff;
+    --accent: #2563eb;
+    --accent-fg: #ffffff;
+    --success: #15803d;
+    --success-bg: #dcfce7;
+    --warning: #b45309;
+    --warning-bg: #fef3c7;
+    --danger: #b91c1c;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 24px 64px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font-family: inherit; cursor: pointer; border: 0; }
+
+  .doc { max-width: 1200px; margin: 0 auto; }
+  .doc-header {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .doc-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .doc-header .meta { color: var(--fg-muted); margin-top: 6px; font-size: 13px; }
+  .doc-header .warn {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--warning-bg);
+    color: var(--warning);
+    border-radius: var(--radius);
+    font-size: 13px;
+    border: 1px solid #fde68a;
+  }
+
+  .screen {
+    margin: 28px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .screen-label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+    font-size: 12px;
+    color: var(--fg-muted);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .screen-label .num {
+    background: var(--brand); color: var(--brand-fg);
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .canvas {
+    background: var(--bg);
+    padding: 32px;
+    min-height: 480px;
+  }
+  .canvas--narrow { display: flex; align-items: center; justify-content: center; min-height: 640px; }
+  .canvas--app { padding: 0; background: var(--surface-2); }
+
+  /* ============= Auth layout ============= */
+  .auth-card {
+    width: 400px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .auth-card .logo {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 16px;
+    margin-bottom: 24px;
+  }
+  .auth-card .logo .dot {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--brand);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--brand-fg); font-size: 12px; font-weight: 700;
+  }
+  .auth-card h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .auth-card .sub { color: var(--fg-muted); margin-bottom: 24px; font-size: 14px; }
+  .auth-card form > * + * { margin-top: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 13px; font-weight: 500; }
+  .field input, .field select, .field textarea {
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--fg);
+    font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .field .hint { color: var(--fg-subtle); font-size: 12px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px;
+    border-radius: var(--radius);
+    font-size: 14px; font-weight: 500;
+    border: 1px solid transparent;
+    transition: background 120ms ease;
+  }
+  .btn-primary { background: var(--brand); color: var(--brand-fg); }
+  .btn-primary:hover { background: #27272a; }
+  .btn-accent { background: var(--accent); color: var(--accent-fg); }
+  .btn-accent:hover { background: #1d4ed8; }
+  .btn-secondary { background: var(--surface); color: var(--fg); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--surface-2); }
+  .btn-ghost { background: transparent; color: var(--fg); }
+  .btn-ghost:hover { background: var(--surface-2); }
+  .btn-block { width: 100%; }
+  .btn-lg { padding: 11px 16px; font-size: 15px; }
+
+  .auth-foot { margin-top: 20px; font-size: 13px; color: var(--fg-muted); text-align: center; }
+  .divider { display: flex; align-items: center; gap: 8px; color: var(--fg-subtle); font-size: 12px; }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+  /* ============= App shell ============= */
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 600px;
+    background: var(--surface);
+  }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 16px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .sidebar .brand {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 8px 16px;
+    font-weight: 600;
+  }
+  .sidebar .brand .dot {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--brand);
+    color: var(--brand-fg);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .sidebar .group-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--fg-subtle); padding: 12px 8px 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    color: var(--fg-muted);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-item:hover { background: var(--surface-2); color: var(--fg); text-decoration: none; }
+  .nav-item.active { background: var(--surface-2); color: var(--fg); }
+  .nav-item .icon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    background: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    opacity: 0.7;
+  }
+  .icon-home { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z'/></svg>"); }
+  .icon-customers { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/><circle cx='8.5' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/><circle cx='8.5' cy='7' r='4'/><path d='M22 21v-2a4 4 0 0 0-3-3.87'/><path d='M16 3.13a4 4 0 0 1 0 7.75'/></svg>"); }
+  .icon-products { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 7h-9l-3-3H3a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z'/><path d='M2 8h20'/><path d='M10 12h.01'/><path d='M14 12h.01'/><path d='M10 16h.01'/><path d='M14 16h.01'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 7h-9l-3-3H3a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z'/><path d='M2 8h20'/><path d='M10 12h.01'/><path d='M14 12h.01'/><path d='M10 16h.01'/><path d='M14 16h.01'/></svg>"); }
+  .icon-policies { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><path d='M14 2v6h6'/><path d='M9 13h6'/><path d='M9 17h6'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><path d='M14 2v6h6'/><path d='M9 13h6'/><path d='M9 17h6'/></svg>"); }
+
+  .main { display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .topbar h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .topbar .crumb { color: var(--fg-subtle); font-size: 13px; margin-bottom: 2px; }
+  .topbar .right { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #e0e7ff; color: #3730a3;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+  }
+  .content { padding: 24px 28px 40px; flex: 1; }
+
+  /* ============= Dashboard ============= */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    background: var(--surface);
+  }
+  .stat-card .lbl { color: var(--fg-muted); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-card .val { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-top: 4px; }
+  .stat-card .delta { font-size: 12px; margin-top: 4px; color: var(--success); }
+  .stat-card .delta.neg { color: var(--danger); }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+  }
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-header h2 { font-size: 15px; font-weight: 600; }
+  .panel-body { padding: 8px 0; }
+  .panel-body--pad { padding: 18px; }
+
+  /* ============= Table ============= */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left; font-size: 12px; font-weight: 500; color: var(--fg-muted);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  tbody td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: var(--surface-2); }
+  .name-cell { display: flex; align-items: center; gap: 10px; }
+  .name-cell .avatar { width: 30px; height: 30px; }
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 500;
+  }
+  .badge-gray { background: var(--surface-2); color: var(--fg-muted); border: 1px solid var(--border); }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-green { background: var(--success-bg); color: var(--success); }
+  .badge-amber { background: var(--warning-bg); color: var(--warning); }
+  .badge-red { background: #fee2e2; color: var(--danger); }
+
+  /* ============= Products page ============= */
+  .product-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .product-card .hero {
+    padding: 20px 22px;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+  }
+  .product-card .hero h3 { font-size: 17px; font-weight: 600; }
+  .product-card .hero .price { margin-top: 14px; display: flex; align-items: baseline; gap: 6px; }
+  .product-card .hero .price .amt { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .product-card .hero .price .unit { color: #cbd5e1; font-size: 13px; }
+  .product-card .body { padding: 16px 22px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .product-card .body .row { display: flex; justify-content: space-between; font-size: 13px; color: var(--fg-muted); }
+  .product-card .body .row .val { color: var(--fg); font-weight: 500; }
+  .product-card .foot { padding: 12px 22px; border-top: 1px solid var(--border); }
+
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  /* ============= Customer profile ============= */
+  .profile-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .profile-header .avatar { width: 56px; height: 56px; font-size: 20px; }
+  .profile-header .meta { flex: 1; }
+  .profile-header h2 { font-size: 18px; font-weight: 600; }
+  .profile-header .meta-row { color: var(--fg-muted); font-size: 13px; margin-top: 2px; }
+
+  .policies-list { display: flex; flex-direction: column; }
+  .policy-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 120px 120px 100px 80px;
+    gap: 12px; align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .policy-row:last-child { border-bottom: 0; }
+  .policy-row .title { font-weight: 500; }
+  .policy-row .sub { color: var(--fg-muted); font-size: 12px; }
+
+  /* ============= Policy select ============= */
+  .summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+  }
+  .summary h3 { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+  .summary .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; font-size: 13px; }
+  .summary .kv .k { color: var(--fg-muted); }
+  .summary .kv .v { color: var(--fg); font-weight: 500; }
+
+  .stepper { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 13px; color: var(--fg-muted); }
+  .stepper .step { display: flex; align-items: center; gap: 6px; }
+  .stepper .step .num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--surface-2); color: var(--fg-muted);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .stepper .step.active .num { background: var(--brand); color: var(--brand-fg); }
+  .stepper .step.done .num { background: var(--success); color: #fff; }
+  .stepper .sep { width: 24px; height: 1px; background: var(--border); }
+
+  /* ============= Demo payment page ============= */
+  .pay-shell { background: var(--surface-2); }
+  .pay-canvas { max-width: 460px; margin: 0 auto; padding: 48px 16px; }
+  .pay-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .pay-card .head {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff; padding: 22px;
+  }
+  .pay-card .head .amt { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; }
+  .pay-card .head .ref { color: #cbd5e1; font-size: 13px; margin-top: 4px; }
+  .pay-card .body { padding: 22px; }
+  .pay-card .body .row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed var(--border); }
+  .pay-card .body .row:last-child { border-bottom: 0; }
+  .pay-card .body .row .k { color: var(--fg-muted); }
+  .pay-card .body .row .v { color: var(--fg); font-weight: 500; }
+  .pay-card .actions { padding: 16px 22px 22px; }
+  .pay-stub-note {
+    text-align: center; color: var(--fg-subtle); font-size: 12px; margin-top: 14px;
+  }
+
+  /* ============= Success ============= */
+  .success-card {
+    background: var(--surface);
+    border: 1px solid var(--success);
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    text-align: center;
+    max-width: 540px; margin: 0 auto;
+  }
+  .success-card .check {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--success-bg); color: var(--success);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 14px;
+  }
+  .success-card h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .success-card p { color: var(--fg-muted); margin-bottom: 20px; }
+
+  /* ============= Misc ============= */
+  .pill-tabs { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+  .pill-tabs a {
+    padding: 5px 12px; font-size: 13px; font-weight: 500;
+    color: var(--fg-muted); border-radius: 999px;
+  }
+  .pill-tabs a.active { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none; }
+  .row-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: var(--radius);
+    background: transparent; border: 1px solid transparent;
+    color: var(--fg-muted);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:hover { background: var(--surface-2); color: var(--fg); }
+  .wa-btn { background: #25D366; color: white; }
+  .wa-btn:hover { background: #1da851; text-decoration: none; color: white; }
+
+  .empty {
+    text-align: center; padding: 48px 16px; color: var(--fg-muted);
+  }
+  .empty .icon {
+    width: 40px; height: 40px; margin: 0 auto 12px;
+    background: var(--surface-2); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fg-subtle);
+  }
+
+  .footer-notes {
+    margin-top: 32px; padding: 18px 22px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    font-size: 13px; color: var(--fg-muted);
+  }
+  .footer-notes strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="doc-header">
+  <h1>Insurance Agent Platform — V1 mockup</h1>
+  <div class="meta">KAN-32 · 6 screen groups · Desktop 1280px · Tailwind + shadcn/ui aesthetic</div>
+  <div class="warn">
+    <strong>Figma blocked:</strong> Starter plan MCP tool-call limit hit and seat is View, so the design was not delivered in Figma. This HTML mockup is the labeled fallback so the sprint is not stalled. Once the seat is upgraded (or quota resets) the same screens get rebuilt in the Align UI Design System file as the playbook requires.
+  </div>
+</div>
+
+<!-- ========== 1. SIGN IN ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">1</span> Sign in · /login · 1280px</div>
+  <div class="canvas canvas--narrow">
+    <div class="auth-card">
+      <div class="logo"><span class="dot">L</span> Levels Insurance</div>
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to manage your customers and policies.</p>
+      <form>
+        <div class="field">
+          <label for="li_email">Email</label>
+          <input id="li_email" type="email" placeholder="agent@levels.in" value="priya@levels.in" />
+        </div>
+        <div class="field">
+          <label for="li_pw">Password</label>
+          <input id="li_pw" type="password" placeholder="••••••••" value="hunter2hunter" />
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="button">Sign in</button>
+        <div class="auth-foot">New here? <a href="#">Create an agent account</a></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 2. SIGN UP ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">2</span> Sign up · /signup · 1280px</div>
+  <div class="canvas canvas--narrow">
+    <div class="auth-card">
+      <div class="logo"><span class="dot">L</span> Levels Insurance</div>
+      <h2>Create your agent account</h2>
+      <p class="sub">One agent, one workspace. You can sell to anyone once you are in.</p>
+      <form>
+        <div class="field">
+          <label for="su_name">Full name</label>
+          <input id="su_name" type="text" placeholder="Priya Sharma" />
+        </div>
+        <div class="field">
+          <label for="su_email">Email</label>
+          <input id="su_email" type="email" placeholder="agent@levels.in" />
+        </div>
+        <div class="field">
+          <label for="su_pw">Password</label>
+          <input id="su_pw" type="password" placeholder="At least 8 characters" />
+          <span class="hint">Use 8+ characters with a number.</span>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="button">Create account</button>
+        <div class="auth-foot">Already have one? <a href="#">Sign in instead</a></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 3. DASHBOARD ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">3</span> Agent dashboard · /dashboard · 1280px</div>
+  <div class="canvas canvas--app">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="dot">L</span> Levels Insurance</div>
+        <div class="group-label">Workspace</div>
+        <a class="nav-item active" href="#"><span class="icon icon-home"></span> Dashboard</a>
+        <a class="nav-item" href="#"><span class="icon icon-customers"></span> Customers <span style="margin-left:auto;color:var(--fg-subtle);font-size:12px">42</span></a>
+        <a class="nav-item" href="#"><span class="icon icon-products"></span> Products</a>
+        <a class="nav-item" href="#"><span class="icon icon-policies"></span> Policies <span style="margin-left:auto;color:var(--fg-subtle);font-size:12px">128</span></a>
+      </aside>
+      <div class="main">
+        <div class="topbar">
+          <div>
+            <div class="crumb">Workspace</div>
+            <h1>Dashboard</h1>
+          </div>
+          <div class="right">
+            <a class="btn btn-primary" href="#"><span style="font-size:18px;line-height:1">+</span> New customer</a>
+            <div class="avatar">PS</div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="lbl">Customers</div>
+              <div class="val">42</div>
+              <div class="delta">+4 this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="lbl">Active policies</div>
+              <div class="val">128</div>
+              <div class="delta">+11 this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="lbl">Bound this month</div>
+              <div class="val">₹6,84,200</div>
+              <div class="delta">+18% vs last</div>
+            </div>
+            <div class="stat-card">
+              <div class="lbl">Pending proposals</div>
+              <div class="val">7</div>
+              <div class="delta neg">2 overdue</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Recent customers</h2>
+                <a href="#" style="font-size:13px">View all →</a>
+              </div>
+              <div class="panel-body">
+                <table>
+                  <thead>
+                    <tr><th>Customer</th><th>City</th><th>Last activity</th><th>Status</th><th></th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><div class="name-cell"><div class="avatar" style="background:#fee2e2;color:#b91c1c">RM</div><div><div>Ravi Mehta</div><div style="color:var(--fg-subtle);font-size:12px">ravi.mehta@gmail.com</div></div></div></td>
+                      <td>Bengaluru</td>
+                      <td>2 hours ago</td>
+                      <td><span class="badge badge-blue">Proposal sent</span></td>
+                      <td class="row-actions"><button class="icon-btn">⋯</button></td>
+                    </tr>
+                    <tr>
+                      <td><div class="name-cell"><div class="avatar" style="background:#fef3c7;color:#b45309">AK</div><div><div>Anjali Kulkarni</div><div style="color:var(--fg-subtle);font-size:12px">+91 98•••••12</div></div></div></td>
+                      <td>Pune</td>
+                      <td>Yesterday</td>
+                      <td><span class="badge badge-green">Bound</span></td>
+                      <td class="row-actions"><button class="icon-btn">⋯</button></td>
+                    </tr>
+                    <tr>
+                      <td><div class="name-cell"><div class="avatar" style="background:#dcfce7;color:#15803d">VS</div><div><div>Vikram Singh</div><div style="color:var(--fg-subtle);font-size:12px">vikram.s@outlook.com</div></div></div></td>
+                      <td>Mumbai</td>
+                      <td>3 days ago</td>
+                      <td><span class="badge badge-amber">Awaiting payment</span></td>
+                      <td class="row-actions"><button class="icon-btn">⋯</button></td>
+                    </tr>
+                    <tr>
+                      <td><div class="name-cell"><div class="avatar" style="background:#e0e7ff;color:#3730a3">ND</div><div><div>Neha Desai</div><div style="color:var(--fg-subtle);font-size:12px">neha.d@yahoo.in</div></div></div></td>
+                      <td>Surat</td>
+                      <td>5 days ago</td>
+                      <td><span class="badge badge-gray">New</span></td>
+                      <td class="row-actions"><button class="icon-btn">⋯</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Quick actions</h2>
+              </div>
+              <div class="panel-body panel-body--pad" style="display:flex;flex-direction:column;gap:10px">
+                <a class="btn btn-secondary btn-lg" href="#" style="justify-content:flex-start"><span class="icon icon-customers" style="opacity:1;background:currentColor;color:var(--fg-muted)"></span> Add a customer</a>
+                <a class="btn btn-secondary btn-lg" href="#" style="justify-content:flex-start"><span class="icon icon-products" style="opacity:1"></span> Browse products</a>
+                <a class="btn btn-secondary btn-lg" href="#" style="justify-content:flex-start"><span class="icon icon-policies" style="opacity:1"></span> Resend a proposal</a>
+                <div style="margin-top:14px;padding:14px;border:1px dashed var(--border);border-radius:var(--radius);font-size:13px;color:var(--fg-muted)">
+                  Tip: open a customer to see their eligible policies based on age and product type.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4. CUSTOMER FORM ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">4</span> New customer · /customers/new · 1280px</div>
+  <div class="canvas canvas--app">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="dot">L</span> Levels Insurance</div>
+        <div class="group-label">Workspace</div>
+        <a class="nav-item" href="#"><span class="icon icon-home"></span> Dashboard</a>
+        <a class="nav-item active" href="#"><span class="icon icon-customers"></span> Customers</a>
+        <a class="nav-item" href="#"><span class="icon icon-products"></span> Products</a>
+        <a class="nav-item" href="#"><span class="icon icon-policies"></span> Policies</a>
+      </aside>
+      <div class="main">
+        <div class="topbar">
+          <div>
+            <div class="crumb"><a href="#">Customers</a> · New</div>
+            <h1>New customer</h1>
+          </div>
+          <div class="right">
+            <button class="btn btn-ghost">Cancel</button>
+            <button class="btn btn-primary">Save and continue</button>
+          </div>
+        </div>
+        <div class="content">
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-header"><h2>Customer details</h2></div>
+              <div class="panel-body panel-body--pad">
+                <form style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                  <div class="field"><label>Full name</label><input value="Ravi Mehta" /></div>
+                  <div class="field"><label>Phone</label><input value="+91 98456 12340" /></div>
+                  <div class="field"><label>Email</label><input value="ravi.mehta@gmail.com" /></div>
+                  <div class="field"><label>Age</label><input value="34" type="number" /></div>
+                  <div class="field" style="grid-column:1/-1"><label>City</label>
+                    <select><option>Bengaluru</option><option>Mumbai</option><option>Pune</option><option>Surat</option></select>
+                  </div>
+                </form>
+                <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:10px">
+                  <button class="btn btn-secondary">Save draft</button>
+                  <button class="btn btn-primary">Save and view policies</button>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><h2>What happens next</h2></div>
+              <div class="panel-body panel-body--pad" style="font-size:13px;color:var(--fg-muted);line-height:1.6">
+                <p>Once saved, we will compute the customer's eligible policies based on age and product type.</p>
+                <p style="margin-top:10px">You will be able to pick a policy, fill in coverage details, generate a PDF proposal, and share it on WhatsApp.</p>
+                <p style="margin-top:10px">No payment is taken at this stage.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5. CUSTOMER PROFILE ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">5</span> Customer profile · /customers/[id] · 1280px</div>
+  <div class="canvas canvas--app">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="dot">L</span> Levels Insurance</div>
+        <div class="group-label">Workspace</div>
+        <a class="nav-item" href="#"><span class="icon icon-home"></span> Dashboard</a>
+        <a class="nav-item active" href="#"><span class="icon icon-customers"></span> Customers</a>
+        <a class="nav-item" href="#"><span class="icon icon-products"></span> Products</a>
+        <a class="nav-item" href="#"><span class="icon icon-policies"></span> Policies</a>
+      </aside>
+      <div class="main">
+        <div class="topbar">
+          <div>
+            <div class="crumb"><a href="#">Customers</a> · Ravi Mehta</div>
+            <h1>Ravi Mehta</h1>
+          </div>
+          <div class="right">
+            <button class="btn btn-secondary">Edit</button>
+            <button class="btn btn-primary">+ New policy</button>
+          </div>
+        </div>
+        <div class="content">
+          <div class="panel" style="margin-bottom:16px">
+            <div class="profile-header">
+              <div class="avatar" style="background:#fee2e2;color:#b91c1c">RM</div>
+              <div class="meta">
+                <h2>Ravi Mehta <span class="badge badge-blue" style="margin-left:8px">Proposal sent</span></h2>
+                <div class="meta-row">ravi.mehta@gmail.com · +91 98456 12340 · Bengaluru · Age 34</div>
+              </div>
+              <div style="text-align:right;font-size:13px;color:var(--fg-muted)">
+                <div>Customer since 12 Aug 2026</div>
+                <div>3 policies · 1 bound</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h2>Applicable policies</h2>
+              <div class="pill-tabs">
+                <a class="active" href="#">All</a>
+                <a href="#">Term</a>
+                <a href="#">Health</a>
+                <a href="#">Motor</a>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="policy-row" style="background:var(--surface-2);font-size:12px;color:var(--fg-muted);text-transform:uppercase;letter-spacing:0.04em;font-weight:500">
+                <div>Product</div><div>Sum insured</div><div>Premium</div><div>Status</div><div>Created</div><div></div>
+              </div>
+              <div class="policy-row">
+                <div><div class="title">Term Life · SecureLife Plus</div><div class="sub">20-year cover, level premium</div></div>
+                <div>₹1,00,00,000</div>
+                <div>₹8,400 / yr</div>
+                <div><span class="badge badge-blue">Proposed</span></div>
+                <div>12 Sep</div>
+                <div class="row-actions"><a class="btn btn-secondary" href="#">Open</a></div>
+              </div>
+              <div class="policy-row">
+                <div><div class="title">Health · FamilyShield Premier</div><div class="sub">5 members, no co-pay</div></div>
+                <div>₹25,00,000</div>
+                <div>₹22,800 / yr</div>
+                <div><span class="badge badge-amber">Awaiting payment</span></div>
+                <div>8 Sep</div>
+                <div class="row-actions"><a class="btn btn-secondary" href="#">Open</a></div>
+              </div>
+              <div class="policy-row">
+                <div><div class="title">Motor · Two-wheeler Comprehensive</div><div class="sub">Honda Activa, 2023 model</div></div>
+                <div>IDV ₹68,000</div>
+                <div>₹2,150 / yr</div>
+                <div><span class="badge badge-green">Bound</span></div>
+                <div>2 Aug</div>
+                <div class="row-actions"><a class="btn btn-secondary" href="#">Open</a></div>
+              </div>
+              <div class="policy-row" style="background:var(--surface)">
+                <div style="color:var(--fg-muted)">Older policies collapsed (4) — <a href="#">show all</a></div>
+                <div></div><div></div><div></div><div></div><div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 6. POLICY SELECT (PDF + WA.ME) ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">6</span> New policy · PDF + WhatsApp share · 1280px</div>
+  <div class="canvas canvas--app">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="dot">L</span> Levels Insurance</div>
+        <div class="group-label">Workspace</div>
+        <a class="nav-item" href="#"><span class="icon icon-home"></span> Dashboard</a>
+        <a class="nav-item active" href="#"><span class="icon icon-customers"></span> Customers</a>
+        <a class="nav-item" href="#"><span class="icon icon-products"></span> Products</a>
+        <a class="nav-item" href="#"><span class="icon icon-policies"></span> Policies</a>
+      </aside>
+      <div class="main">
+        <div class="topbar">
+          <div>
+            <div class="crumb"><a href="#">Customers</a> · <a href="#">Ravi Mehta</a> · New policy</div>
+            <h1>Term Life · SecureLife Plus</h1>
+          </div>
+          <div class="right">
+            <button class="btn btn-secondary">Save draft</button>
+          </div>
+        </div>
+        <div class="content">
+          <div class="stepper">
+            <div class="step done"><span class="num">✓</span> Customer</div>
+            <div class="sep"></div>
+            <div class="step done"><span class="num">✓</span> Product</div>
+            <div class="sep"></div>
+            <div class="step active"><span class="num">3</span> Coverage</div>
+            <div class="sep"></div>
+            <div class="step"><span class="num">4</span> Generate &amp; share</div>
+            <div class="sep"></div>
+            <div class="step"><span class="num">5</span> Payment</div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-header"><h2>Coverage details</h2></div>
+              <div class="panel-body panel-body--pad">
+                <form style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                  <div class="field"><label>Sum insured</label><input value="₹1,00,00,000" /></div>
+                  <div class="field"><label>Term length</label>
+                    <select><option>20 years</option><option>25 years</option><option>30 years</option></select>
+                  </div>
+                  <div class="field"><label>Premium frequency</label>
+                    <select><option>Yearly</option><option>Monthly</option></select>
+                  </div>
+                  <div class="field"><label>Nominee</label><input value="Anjali Mehta (spouse)" /></div>
+                  <div class="field" style="grid-column:1/-1"><label>Notes for the proposal</label>
+                    <textarea rows="3">Ravi is a non-smoker, no pre-existing conditions. Cover should be 20x annual income as discussed.</textarea>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div>
+              <div class="summary">
+                <h3>Proposal summary</h3>
+                <div class="kv">
+                  <div class="k">Customer</div><div class="v">Ravi Mehta</div>
+                  <div class="k">Product</div><div class="v">SecureLife Plus (Term, 20yr)</div>
+                  <div class="k">Sum insured</div><div class="v">₹1,00,00,000</div>
+                  <div class="k">Indicative premium</div><div class="v">₹8,400 / yr</div>
+                </div>
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+                  <button class="btn btn-primary btn-lg btn-block">Generate proposal PDF</button>
+                  <a class="btn wa-btn btn-lg btn-block" href="https://wa.me/919845612340?text=Hi%20Ravi%2C%20here%20is%20your%20insurance%20proposal%20for%20SecureLife%20Plus.%20PDF%3A%20https%3A%2F%2Flevels.in%2Fproposal%2Fp_8f3a2c.pdf">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.2-.3-.2-.6-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 14.8 3.5 13.4 3.5 12c0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5-3.8 8.5-8.5 8.5z"/></svg>
+                    Share on WhatsApp
+                  </a>
+                  <div style="font-size:12px;color:var(--fg-subtle);text-align:center">
+                    The PDF link and prefilled message are baked into the wa.me URL.
+                  </div>
+                </div>
+              </div>
+              <div class="summary" style="margin-top:14px">
+                <h3>Next step</h3>
+                <div style="font-size:13px;color:var(--fg-muted);line-height:1.6">
+                  When Ravi pays, the proposal becomes a bound policy and a confirmation email with the PDF is sent through Resend.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 7. PAYMENT PAGE ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">7</span> Demo payment · /pay/[paymentId] · 480px (unauth)</div>
+  <div class="canvas canvas--app pay-shell" style="padding:0">
+    <div class="pay-canvas">
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-weight:600"><span style="width:22px;height:22px;border-radius:6px;background:var(--brand);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px">L</span> Levels Insurance</div>
+      </div>
+      <div class="pay-card">
+        <div class="head">
+          <div style="display:flex;align-items:center;gap:8px;color:#cbd5e1;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px">Demo payment</div>
+          <div class="amt">₹8,400</div>
+          <div class="ref">Reference · pay_8f3a2c1d · Term · SecureLife Plus</div>
+        </div>
+        <div class="body">
+          <div class="row"><div class="k">Customer</div><div class="v">Ravi Mehta</div></div>
+          <div class="row"><div class="k">Product</div><div class="v">Term Life · 20 years</div></div>
+          <div class="row"><div class="k">Sum insured</div><div class="v">₹1,00,00,000</div></div>
+          <div class="row"><div class="k">Effective date</div><div class="v">Today</div></div>
+          <div class="row"><div class="k">Gateway</div><div class="v">Stub (no real charge)</div></div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-accent btn-lg btn-block">Pay ₹8,400</button>
+          <div class="pay-stub-note">No card details required for the demo. Pressing Pay marks the policy bound, sends the Resend confirmation email, and shows the success state.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 8. PAYMENT SUCCESS ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">8</span> Payment success · /pay/[paymentId]/success · 480px (unauth)</div>
+  <div class="canvas canvas--app pay-shell" style="padding:0">
+    <div class="pay-canvas">
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-weight:600"><span style="width:22px;height:22px;border-radius:6px;background:var(--brand);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px">L</span> Levels Insurance</div>
+      </div>
+      <div class="success-card">
+        <div class="check">✓</div>
+        <h2>Policy bound</h2>
+        <p>Ravi, your SecureLife Plus policy is active. We have sent the confirmation and PDF to <strong>ravi.mehta@gmail.com</strong>.</p>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <a class="btn btn-secondary" href="#">Download policy PDF</a>
+          <a class="btn btn-primary" href="#">Back to agent</a>
+        </div>
+        <div style="margin-top:18px;font-size:12px;color:var(--fg-subtle)">Reference · pay_8f3a2c1d</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 9. PRODUCTS BROWSING ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">9</span> Products · /products · 1280px (reference)</div>
+  <div class="canvas canvas--app">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="dot">L</span> Levels Insurance</div>
+        <div class="group-label">Workspace</div>
+        <a class="nav-item" href="#"><span class="icon icon-home"></span> Dashboard</a>
+        <a class="nav-item" href="#"><span class="icon icon-customers"></span> Customers</a>
+        <a class="nav-item active" href="#"><span class="icon icon-products"></span> Products</a>
+        <a class="nav-item" href="#"><span class="icon icon-policies"></span> Policies</a>
+      </aside>
+      <div class="main">
+        <div class="topbar">
+          <div>
+            <div class="crumb">Workspace · Products</div>
+            <h1>Product catalogue</h1>
+          </div>
+          <div class="right">
+            <div class="pill-tabs"><a class="active" href="#">All</a><a href="#">Term</a><a href="#">Health</a><a href="#">Motor</a></div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="products-grid">
+            <div class="product-card">
+              <div class="hero"><h3>SecureLife Plus</h3><div style="color:#cbd5e1;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;margin-top:4px">Term life · 20yr</div>
+              <div class="price"><span class="amt">₹8,400</span><span class="unit">/ yr · indicative</span></div></div>
+              <div class="body">
+                <div class="row"><span>Sum insured</span><span class="val">₹1,00,00,000</span></div>
+                <div class="row"><span>Eligibility</span><span class="val">Ages 18 to 50</span></div>
+                <div class="row"><span>Claim ratio</span><span class="val">98.2%</span></div>
+              </div>
+              <div class="foot"><button class="btn btn-secondary btn-block">See details</button></div>
+            </div>
+            <div class="product-card">
+              <div class="hero" style="background:linear-gradient(135deg,#15803d,#16a34a)"><h3>FamilyShield Premier</h3><div style="color:#dcfce7;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;margin-top:4px">Health · family</div>
+              <div class="price"><span class="amt">₹22,800</span><span class="unit">/ yr · indicative</span></div></div>
+              <div class="body">
+                <div class="row"><span>Sum insured</span><span class="val">₹25,00,000</span></div>
+                <div class="row"><span>Members</span><span class="val">Up to 6</span></div>
+                <div class="row"><span>Network hospitals</span><span class="val">9,400+</span></div>
+              </div>
+              <div class="foot"><button class="btn btn-secondary btn-block">See details</button></div>
+            </div>
+            <div class="product-card">
+              <div class="hero" style="background:linear-gradient(135deg,#1e3a8a,#2563eb)"><h3>Two-wheeler Comprehensive</h3><div style="color:#dbeafe;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;margin-top:4px">Motor · own damage + third party</div>
+              <div class="price"><span class="amt">₹2,150</span><span class="unit">/ yr · indicative</span></div></div>
+              <div class="body">
+                <div class="row"><span>IDV</span><span class="val">Up to ₹68,000</span></div>
+                <div class="row"><span>Eligibility</span><span class="val">Any bike or scooter</span></div>
+                <div class="row"><span>Garage network</span><span class="val">1,800+</span></div>
+              </div>
+              <div class="foot"><button class="btn btn-secondary btn-block">See details</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 10. EMPTY / STATE ========== -->
+<section class="screen">
+  <div class="screen-label"><span class="num">10</span> Empty state · Customers · 1280px</div>
+  <div class="canvas canvas--app">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="dot">L</span> Levels Insurance</div>
+        <div class="group-label">Workspace</div>
+        <a class="nav-item" href="#"><span class="icon icon-home"></span> Dashboard</a>
+        <a class="nav-item active" href="#"><span class="icon icon-customers"></span> Customers</a>
+        <a class="nav-item" href="#"><span class="icon icon-products"></span> Products</a>
+        <a class="nav-item" href="#"><span class="icon icon-policies"></span> Policies</a>
+      </aside>
+      <div class="main">
+        <div class="topbar">
+          <div><div class="crumb">Workspace</div><h1>Customers</h1></div>
+          <div class="right"><button class="btn btn-primary">+ New customer</button></div>
+        </div>
+        <div class="content">
+          <div class="panel">
+            <div class="empty">
+              <div class="icon">＋</div>
+              <h3 style="color:var(--fg);font-weight:600;font-size:15px;margin-bottom:6px">No customers yet</h3>
+              <div style="font-size:13px;max-width:320px;margin:0 auto">Add your first customer to start building a policy. You can attach multiple policies to one customer.</div>
+              <div style="margin-top:16px"><button class="btn btn-primary">+ Add a customer</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer-notes">
+  <strong>Notes for Atlas and David.</strong> The six required screen groups are covered: auth (sign in, sign up), dashboard, new customer form + profile detail with applicable policies, per-customer policy select with PDF generation and a wa.me share button that prefills the PDF link, the demo payment page at <code>/pay/[paymentId]</code> with a Pay action that marks the policy active and triggers the Resend confirmation email, and the success state. Two reference screens added for context: product catalogue and an empty state. Design uses a tight, neutral system (Tailwind + shadcn/ui aesthetic) matching the chosen stack, with a single accent (blue) for action, semantic colours for status badges, and accessible focus rings. <strong>The Figma version is blocked behind a Starter plan MCP call limit and a View seat</strong>; once either is lifted, the same screens will be rebuilt as Align UI component instances on a new page in the design system file.
+</div>
+
+</div>
+</body>
+</html>
